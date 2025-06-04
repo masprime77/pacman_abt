@@ -1,3 +1,4 @@
+import math
 import pygame
 import sys
 
@@ -47,7 +48,34 @@ class Pacman:
         self.y = max(self.radius, min(HEIGHT - self.radius, self.y))
 
     def draw(self, surface):
-        pygame.draw.circle(surface, YELLOW, (self.x, self.y), self.radius)
+        start_angle, end_angle = 0, 0
+        if self.dx > 0:
+            start_angle, end_angle = 0.2 * math.pi, -0.2 * math.pi
+        elif self.dx < 0:
+            start_angle, end_angle = 1.2 * math.pi, 0.8 * math.pi
+        elif self.dy > 0:
+            start_angle, end_angle = 0.7 * math.pi, 1.3 * math.pi
+        elif self.dy < 0:
+            start_angle, end_angle = 1.7 * math.pi, 1.3 * math.pi
+        else:
+            # quieto = boca cerrada
+            start_angle, end_angle = 0, 2 * math.pi
+
+        if start_angle != 0 or end_angle != 2 * math.pi:
+            pygame.draw.polygon(surface, BLACK, [
+                (self.x, self.y),
+                (
+                    self.x + self.radius * math.cos(start_angle),
+                    self.y - self.radius * math.sin(start_angle)
+                ),
+                (
+                    self.x + self.radius * math.cos(end_angle),
+                    self.y - self.radius * math.sin(end_angle)
+                )
+            ])
+            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
+        else:
+            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
 
 #Initialize Pac-Man
 pacman = Pacman(WIDTH // 2, HEIGHT // 2)
