@@ -19,6 +19,9 @@ YELLOW = (255, 255, 0)
 clock = pygame.time.Clock()
 FPS = 60
 
+#Other constants
+PI = math.pi
+
 class Pacman:
     def __init__(self, x, y, radius=20, speed=3):
         self.x = x
@@ -50,18 +53,19 @@ class Pacman:
     def draw(self, surface):
         start_angle, end_angle = 0, 0
         if self.dx > 0:
-            start_angle, end_angle = 0.2 * math.pi, -0.2 * math.pi
+            start_angle, end_angle = 0.2 * PI, -0.2 * PI
         elif self.dx < 0:
-            start_angle, end_angle = 1.2 * math.pi, 0.8 * math.pi
+            start_angle, end_angle = 1.2 * PI, 0.8 * PI
         elif self.dy > 0:
-            start_angle, end_angle = 0.7 * math.pi, 1.3 * math.pi
+            start_angle, end_angle = 0.7 * PI, 1.3 * PI
         elif self.dy < 0:
-            start_angle, end_angle = 1.7 * math.pi, 1.3 * math.pi
+            start_angle, end_angle = 1.7 * PI, 1.3 * PI
         else:
             # quieto = boca cerrada
-            start_angle, end_angle = 0, 2 * math.pi
+            start_angle, end_angle = 0, 2 * PI
 
-        if start_angle != 0 or end_angle != 2 * math.pi:
+        if start_angle != 0 or end_angle != 2 * PI:
+            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
             pygame.draw.polygon(surface, BLACK, [
                 (self.x, self.y),
                 (
@@ -73,7 +77,6 @@ class Pacman:
                     self.y - self.radius * math.sin(end_angle)
                 )
             ])
-            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
         else:
             pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
 
