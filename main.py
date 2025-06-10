@@ -82,8 +82,36 @@ class Pacman:
 
             pygame.draw.polygon(surface, BLACK, points)
 
+
+class Heart:
+    def __init__(self, x, y, radius=15):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.found = False
+
+    def draw(self, surface):
+        if not self.found:
+            pygame.draw.circle(surface, (255, 0, 100), (self.x, self.y), self.radius)
+            pygame.draw.circle(surface, (255, 0, 100), (self.x + self.radius * 1.5, self.y), self.radius)
+            pygame.draw.polygon(surface, (255, 0, 100), [
+                (self.x - self.radius, self.y + 4.95),
+                (self.x + self.radius * 2.5, self.y + 4.95),
+                (self.x + self.radius * 0.75, self.y + self.radius * 1.75),
+            ])
+
+        
+    def is_colliding(self, pacman):
+        distance = math.hypot(self.x - pacman.x, self.y - pacman.y)
+
+        return distance < self.radius + pacman.radius
+
+
 #Initialize Pac-Man
 pacman = Pacman(WIDTH // 2, HEIGHT // 2)
+
+# Initialize Heart
+heart = Heart(WIDTH - 50, 40)
 
 # Main game loop
 runinng = True
@@ -98,6 +126,20 @@ while runinng:
 
     screen.fill(BLACK)
     pacman.draw(screen)
+    heart.draw(screen)
+
+    heart.draw(screen)
+
+    if heart.is_colliding(pacman):
+        screen.fill(BLACK)
+        heart.found = True
+        font = pygame.font.SysFont(None, 36)
+        text = font.render("Te amo mucho princesa! Felices 4 meses <3", True, WHITE)
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        screen.blit(text, text_rect)
+    else:
+        heart.found = False
+
     pygame.display.flip()
 
 pygame.quit()
