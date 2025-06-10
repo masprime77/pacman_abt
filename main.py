@@ -57,9 +57,9 @@ class Pacman:
         elif self.dx < 0:
             start_angle, end_angle = 1.2 * PI, 0.8 * PI
         elif self.dy > 0:
-            start_angle, end_angle = 0.7 * PI, 1.3 * PI
+            start_angle, end_angle = 1.3 * PI, 1.7 * PI
         elif self.dy < 0:
-            start_angle, end_angle = 1.7 * PI, 1.3 * PI
+            start_angle, end_angle = 0.3 * PI, 0.7 * PI
         else:
             # quieto = boca cerrada
             start_angle, end_angle = 0, 2 * PI
@@ -69,12 +69,12 @@ class Pacman:
             pygame.draw.polygon(surface, BLACK, [
                 (self.x, self.y),
                 (
-                    self.x + self.radius * math.cos(start_angle),
-                    self.y - self.radius * math.sin(start_angle)
+                    self.x + self.radius * math.cos(start_angle) + 0.1,
+                    self.y - self.radius * math.sin(start_angle) + 0.1
                 ),
                 (
-                    self.x + self.radius * math.cos(end_angle),
-                    self.y - self.radius * math.sin(end_angle)
+                    self.x + self.radius * math.cos(end_angle) + 0.1,
+                    self.y - self.radius * math.sin(end_angle) + 0.1
                 )
             ])
         else:
