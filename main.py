@@ -51,34 +51,36 @@ class Pacman:
         self.y = max(self.radius, min(HEIGHT - self.radius, self.y))
 
     def draw(self, surface):
-        start_angle, end_angle = 0, 0
-        if self.dx > 0:
-            start_angle, end_angle = 0.2 * PI, -0.2 * PI
-        elif self.dx < 0:
-            start_angle, end_angle = 1.2 * PI, 0.8 * PI
-        elif self.dy > 0:
-            start_angle, end_angle = 1.3 * PI, 1.7 * PI
-        elif self.dy < 0:
-            start_angle, end_angle = 0.3 * PI, 0.7 * PI
-        else:
-            # quieto = boca cerrada
-            start_angle, end_angle = 0, 2 * PI
+        mouth_angle = PI / 4  # 45 degrees
+        direction = 0
+        semi_circle_precision = 25  # Number of points to draw the mouth
 
-        if start_angle != 0 or end_angle != 2 * PI:
-            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
-            pygame.draw.polygon(surface, BLACK, [
-                (self.x, self.y),
-                (
-                    self.x + self.radius * math.cos(start_angle) + 0.1,
-                    self.y - self.radius * math.sin(start_angle) + 0.1
-                ),
-                (
-                    self.x + self.radius * math.cos(end_angle) + 0.1,
-                    self.y - self.radius * math.sin(end_angle) + 0.1
-                )
-            ])
+        pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
+
+        if self.dx == 0 and self.dy == 0:
+            pass
         else:
-            pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
+            if self.dx > 0:
+                direction = 0
+            elif self.dx < 0:
+                direction = PI
+            elif self.dy > 0:
+                direction = 0.5 * PI
+            elif self.dy < 0:
+                direction = 1.5 * PI
+
+            start_angle = direction + mouth_angle
+            end_angle = direction - mouth_angle        
+
+            points = [(self.x, self.y)]
+            
+            for angle in range(semi_circle_precision):
+                theta = start_angle + angle * (end_angle - start_angle) / semi_circle_precision
+                x = self.x + self.radius * math.cos(theta)
+                y = self.y + self.radius * math.sin(theta)
+                points.append((x, y))
+
+            pygame.draw.polygon(surface, BLACK, points)
 
 #Initialize Pac-Man
 pacman = Pacman(WIDTH // 2, HEIGHT // 2)
